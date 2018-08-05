@@ -1,6 +1,6 @@
 # Open in Git Repository
 
-Sublime Text plugin for opening the remote git url for the current file.
+Sublime Text 3 plugin for opening the remote git url for the current file.
 
 
 ## Installation
@@ -10,6 +10,7 @@ This package is not yet in **Package Control** yet, so for now what you can do i
 1. Download the `OpenInGitRepositofy.sublime-package` file
 2. Move it to your Sublime Text's **Installed Packages** directory.
   - On macOS, that's located in `~/Library/Application Support/Sublime Text 3/Installed Packages`
+  - On Linux, that's usually in `~/.config/sublime-text-3/Installed Packages`
 
 
 ## Demo
