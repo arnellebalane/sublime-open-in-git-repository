@@ -70,8 +70,12 @@ class OpenInGitRepositoryCommand(sublime_plugin.WindowCommand):
 
     def _get_line_suffix(self):
         view = self.window.active_view()
-        line = view.rowcol(view.sel()[0].begin())[0] + 1
-        return "#L%s" % (line)
+        selection = view.sel()[0]
+        start = view.rowcol(selection.begin())[0] + 1
+        end = view.rowcol(selection.end())[0] + 1
+        if start == end:
+            return "#L%s" % (start) if start != 1 else ""
+        return "#L%s-L%s" % (start, end)
 
     def _get_remote_file_url(
             self, remote_url, project_root, project_file_path, line_suffix):
