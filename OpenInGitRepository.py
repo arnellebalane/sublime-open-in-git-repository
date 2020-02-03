@@ -34,7 +34,7 @@ class OpenInGitRepositoryCommand(sublime_plugin.WindowCommand):
 
     def _is_git_repository(self, path):
         exit_code = subprocess.call(
-            ['git', '-C', path, 'status'], stdout=open(os.devnull, 'w'),
+            ['git', '-C', path, 'rev-parse'], stdout=open(os.devnull, 'w'),
             stderr=subprocess.STDOUT)
         return exit_code == 0
 
