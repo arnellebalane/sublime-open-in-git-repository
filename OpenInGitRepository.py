@@ -14,8 +14,13 @@ class OpenInGitRepositoryCommand(sublime_plugin.WindowCommand):
         remote_url = self._get_remote_url(project_root)
         remote_url = self._normalize_remote_url(remote_url)
         project_file_path = self._get_file_project_path(project_root)
+        line_suffix = self._get_line_suffix()
         remote_file_url = self._get_remote_file_url(
-            remote_url, project_root, project_file_path)
+            remote_url,
+            project_root,
+            project_file_path,
+            line_suffix
+        )
         webbrowser.open(remote_file_url)
 
     def is_enabled(self):
@@ -63,12 +68,25 @@ class OpenInGitRepositoryCommand(sublime_plugin.WindowCommand):
         file_path = self.window.active_view().file_name()
         return re.sub(project_path, '', file_path)[1:]
 
+    def _get_line_suffix(self):
+        view = self.window.active_view()
+        selection = view.sel()[0]
+        start = view.rowcol(selection.begin())[0] + 1
+        end = view.rowcol(selection.end())[0] + 1
+        if start == end:
+            return "#L%s" % (start) if start != 1 else ""
+        return "#L%s-L%s" % (start, end)
+
     def _get_remote_file_url(
-            self, remote_url, project_root, project_file_path):
+            self, remote_url, project_root, project_file_path, line_suffix):
         host = urlparse(remote_url).netloc
         branch = self._get_current_branch(project_root)
         path_modifiers = {
             'bitbucket.org': 'src'
         }
         path_modifier = path_modifiers.get(host, 'blob')
-        return '/'.join([remote_url, path_modifier, branch, project_file_path])
+        return '/'.join([
+            remote_url,
+            path_modifier,
+            branch,
+            project_file_path + line_suffix])
