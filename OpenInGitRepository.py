@@ -26,16 +26,16 @@ class OpenInGitRepositoryCommand(sublime_plugin.WindowCommand):
     def is_enabled(self):
         file_name = self.window.active_view().file_name()
         project_root = self._get_project_root()
-        is_repo = self._is_git_repository(project_root)
-        return (file_name and len(file_name) > 0 and is_repo)
+        return (file_name and len(file_name) > 0 and project_root is not None)
 
     def _get_project_root(self):
         file_path = self.window.active_view().file_name()
-        folders = self.window.folders()
-        for folder in folders:
-            if file_path.startswith(folder):
-                return folder
-        return os.path.dirname(file_path)
+        dir_path = os.path.dirname(file_path)
+        if not self._is_git_repository(dir_path):
+            return None
+        output = subprocess.check_output(
+            ['git', '-C', dir_path, 'rev-parse', '--show-toplevel'])
+        return output.decode('utf-8').strip()
 
     def _is_git_repository(self, path):
         exit_code = subprocess.call(
