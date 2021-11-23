@@ -53,7 +53,7 @@ class OpenInGitRepositoryCommand(sublime_plugin.WindowCommand):
         output = output.decode('utf-8')
         if not output:
             return None
-        match = re.match(r'\w+\s(.+)(?= )', output)
+        match = re.match(r'[\w-]+\s(.+)(?= )', output)
         return match.group(1)
 
     def _normalize_remote_url(self, url):
